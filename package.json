@@ -1,0 +1,44 @@
+{
+  "name": "vue-fastdfs-ftp",
+  "author": "musheng",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "clipboard": "^2.0.4",
+    "element-ui": "^2.12.0",
+    "file-saver": "^2.0.2",
+    "fuse.js": "^3.4.4",
+    "js-cookie": "^2.2.0",
+    "nprogress": "^0.2.0",
+    "screenfull": "^4.2.0",
+    "vue": "^2.6.6",
+    "vue-drag-select-pro": "^1.0.4",
+    "vue-i18n": "^8.11.1",
+    "vue-router": "^3.0.6",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@babel/register": "^7.4.4",
+    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-plugin-eslint": "^3.5.0",
+    "@vue/cli-service": "^3.5.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "mockjs": "^1.0.1-beta3",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.1.0",
+    "svg-sprite-loader": "^4.1.3",
+    "vue-cli-plugin-element": "^1.0.1",
+    "vue-cli-plugin-i18n": "^0.6.0",
+    "vue-template-compiler": "^2.5.21"
+  }
+}

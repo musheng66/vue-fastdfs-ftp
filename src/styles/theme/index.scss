@@ -1,0 +1,91 @@
+// 炫酷主题
+@import './star.scss';
+//渐变主题
+@import './gradual.scss';
+// 暗色
+@import './dark.scss';
+
+$defaultColor: #eee;
+$defaultActiveColor: #fff;
+
+/*
+  通用模版项目自定义样式
+ */
+.ms-page {
+  //padding: 10px;
+  width: 100%;
+  height: 100%;
+}
+.ms-view {
+  background: #fff;
+  border-radius: 3px;
+  opacity: .92;
+  //padding: 5px;
+  //min-height: calc(100vh - #{$navBarHeight} - 20px);
+  width: 100%;
+  height: 100%;
+}
+.hasTagsView {
+  .ms-view {
+    //min-height: calc(100vh - #{$navBarHeight} - #{$tagsViewHeight} - 20px);
+  }
+}
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+
+.ms-contain {
+  background-color: #f2f2f2;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  .ms-header {
+    background: linear-gradient(to left top, #32b7d6, #2591d4);
+    .ms-top {
+      color: $defaultColor;
+      .top-bar__item, .top-bar__item i {
+        color: $defaultColor;
+      }
+      .el-menu-item i {
+        color: $defaultColor;
+      }
+      .el-menu-item.is-active i {
+        color: $defaultActiveColor;
+      }
+      .top-bar__title {
+        .top-bar__item {
+          .top-menu {
+            .el-menu {
+              background: transparent;
+              .el-menu-item {
+                background: transparent;
+              }
+              .el-menu-item:hover {
+                background: #49b4d6;
+              }
+            }
+          }
+          .top-search {
+            .el-input__inner {
+              color: $defaultColor;
+              border: none;
+              background-color: transparent;
+            }
+          }
+        }
+      }
+    }
+  }
+  .ms-layout {
+    .ms-left {
+
+    }
+    .ms-main {
+      .ms-tags {
+        .tags-box {
+          // border-top: 1px solid #f6f6f6;
+          background: #fff;
+        }
+      }
+    }
+  }
+}

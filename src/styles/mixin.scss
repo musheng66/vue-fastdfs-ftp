@@ -1,0 +1,307 @@
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin scrollBar {
+  /* 滚动条整体部分 */
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+    background-color: transparent;
+  }
+  /* 滚动条里面的小方块，能向上向下移动（或往左往右移动，取决于是垂直滚动条还是水平滚动条） */
+  ::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: hsla(220, 4%, 58%, .3);
+  }
+  /* 滚动条的轨道（里面装有Thumb） */
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  /* 滚动条的轨道的两端按钮，允许通过点击微调小方块的位置 */
+  ::-webkit-scrollbar-button {
+    background-color: transparent;
+  }
+  /* 内层轨道，滚动条中间部分（除去） */
+  ::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+  }
+  /* 边角，即两个滚动条的交汇处 */
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+  /* 两个滚动条的交汇处上用于通过拖动调整元素大小的小控件 */
+  ::-webkit-resizer {
+    background-color: transparent;
+  }
+}
+
+@mixin radius($width, $size, $color) {
+  width: $width;
+  height: $width;
+  line-height: $width;
+  border-radius: $width;
+  text-align: center;
+  border-width: $size;
+  border-style: solid;
+  border-color: $color;
+}
+
+@mixin relative {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin pct($pct) {
+  width: #{$pct};
+  position: relative;
+  margin: 0 auto;
+}
+
+@mixin triangle($width, $height, $color, $direction) {
+  $width: $width/2;
+  $color-border-style: $height solid $color;
+  $transparent-border-style: $width solid transparent;
+  height: 0;
+  width: 0;
+  @if $direction==up {
+    border-bottom: $color-border-style;
+    border-left: $transparent-border-style;
+    border-right: $transparent-border-style;
+  }
+  @else if $direction==right {
+    border-left: $color-border-style;
+    border-top: $transparent-border-style;
+    border-bottom: $transparent-border-style;
+  }
+  @else if $direction==down {
+    border-top: $color-border-style;
+    border-left: $transparent-border-style;
+    border-right: $transparent-border-style;
+  }
+  @else if $direction==left {
+    border-right: $color-border-style;
+    border-top: $transparent-border-style;
+    border-bottom: $transparent-border-style;
+  }
+}
+
+/* 自定义mixin，主要为精简页面CSS语句及解决兼容性问题
+ For modern browsers
+ 1. The space content is one way to avoid an Opera bug when the
+    contenteditable attribute is included anywhere else in the document.
+    Otherwise it causes space to appear at the top and bottom of elements
+    that are clearfixed.
+ 2. The use of `table` rather than `block` is only necessary if using
+    `:before` to contain the top-margins of child elements.
+ Source: http://nicolasgallagher.com/micro-clearfix-hack */
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// （Responsive image）Keep images from scaling beyond the width of their parents.
+@mixin img-responsive($display: block) {
+  display: $display;
+  max-width: 100%; // Part 1: Set a maximum relative to the parent
+  height: auto; // Part 2: Scale the height according to the width, otherwise you get stretching
+}
+
+// Resize anything
+@mixin resizable($direction) {
+  resize: $direction; // Options: horizontal, vertical, both
+  overflow: auto; // Per CSS3 UI, `resize` only applies when `overflow` isn't `visible`
+}
+
+// Text overflow
+// Requires inline-block or block for proper styling
+@mixin text-overflow() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Center-align a block level element
+@mixin center-block() {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin absolute-center() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin fixed-center() {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin flex-box-center(){
+  display: -webkit-box;  /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+  display: -moz-box;     /* 老版本语法: Firefox (buggy) */
+  display: -ms-flexbox;  /* 混合版本语法: IE 10 */
+  display: -webkit-flex; /* 新版本语法: Chrome 21+ */
+  display: flex;         /* 新版本语法: Opera 12.1, Firefox 22+ */
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+// flex布局兼容性写法
+@mixin flex($wrap: nowrap) {
+  display: -webkit-box;  /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+  display: -moz-box;     /* 老版本语法: Firefox (buggy) */
+  display: -ms-flexbox;  /* 混合版本语法: IE 10 */
+  display: -webkit-flex; /* 新版本语法: Chrome 21+ */
+  display: flex;         /* 新版本语法: Opera 12.1, Firefox 22+ */
+  flex-wrap: $wrap;
+}
+
+// justify-content，主轴对齐方式
+@mixin justify-content($jc: center) {
+  @if $jc == center {
+    -webkit-box-pack: $jc;
+  }
+  @if $jc == flex-start {
+    -webkit-box-pack: start;
+  }
+  @if $jc == flex-end {
+    -webkit-box-pack: end;
+  }
+  @if $jc == space-between {
+    -webkit-box-pack: justify;
+  }
+  -moz-justify-content: $jc;
+  -webkit-justify-content: $jc;
+  justify-content: $jc;
+}
+
+// align-items，交叉轴对齐方式
+@mixin align-items($ai: center) {
+  -webkit-box-align: $ai;
+  -moz-align-items: $ai;
+  -webkit-align-items: $ai;
+  align-items: $ai;
+}
+
+// flex-direction，子元素显示方向
+@mixin flex-direction($flex-dr: row) {
+  @if $flex-dr == row {
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+  }
+  @if $flex-dr == row-reverse {
+    -webkit-box-pack: end;
+    -webkit-box-direction: reverse;
+    -webkit-box-orient: horizontal;
+  }
+  @if $flex-dr == column {
+    -webkit-box-direction: normal;
+    -webkit-box-orient: vertical;
+  }
+  @if $flex-dr == column-reverse {
+    -webkit-box-pack: end;
+    -webkit-box-direction: reverse;
+    -webkit-box-orient: vertical;
+  }
+  -moz-flex-direction: $flex-dr;
+  -webkit-flex-direction: $flex-dr;
+  flex-direction: $flex-dr;
+}
+
+// 子元素显示顺序
+@mixin order($o: 1) {
+  -webkit-box-ordinal-group: $o;
+  -moz-order: $o;
+  -webkit-order: $o;
+  order: $o;
+}
+
+// 子元素是否允许缩放，grow放大，shrink缩小
+@mixin flex-grow-shrink($flex-gs: shrink) {
+  @if $flex-gs == grow {
+    -webkit-box-flex: 1.0;
+    -moz-flex-grow: 1;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+  }
+  @if $flex-gs == shrink {
+    -webkit-box-flex: 1.0;
+    -moz-flex-shrink: 1;
+    -webkit-flex-shrink: 1;
+    flex-shrink: 1;
+  }
+}
+
+// 图片背景设置
+@mixin background-image-common($img: "", $background-size: contain, $background-position: center, $background-repeat: no-repeat) {
+  @if $img == "" {
+    background: $background-repeat $background-position;
+  }
+  @if $img != "" {
+    background: url($img) $background-repeat $background-position;
+  }
+  background-size: $background-size;
+}
+
+// 动画效果设置
+@mixin transition-common($prop: all, $duration: 0.25s, $time-func: ease-in-out) {
+  transition: $prop $duration $time-func;
+  -moz-transition: $prop $duration $time-func; /* Firefox 4 */
+  -webkit-transition: $prop $duration $time-func; /* Safari 和 Chrome */
+  -o-transition: $prop $duration $time-func; /* Opera */
+}
+
+// 高斯模糊效果
+@mixin filter-blur($blur: 10px) {
+  -webkit-filter: blur($blur); /* Chrome, Opera */
+  -moz-filter: blur($blur);
+  -ms-filter: blur($blur);
+  filter: blur($blur);
+}
+
+// 变形
+@mixin transform($action) {
+  transform: $action;
+  -ms-transform: $action; 	/* IE 9 */
+  -moz-transform: $action; 	/* Firefox */
+  -webkit-transform: $action; /* Safari 和 Chrome */
+  -o-transform: $action; 	/* Opera */
+}
+
+// 页面标题
+@mixin page-title($font-size: 20px, $padding: 10px, $color: #666, $background: #eee, $border-color: #ddd, $border-radius: 5px) {
+  padding: $padding;
+  font-size: $font-size;
+  color: $color;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  background: $background;
+  line-height: 1;
+}
+
+// 圆角，左上/右上/右下/左下
+@mixin border-radius($border-top-left-radius: 5px, $border-top-right-radius: 5px, $border-bottom-right-radius: 5px, $border-bottom-left-radius: 5px) {
+  border-radius: $border-top-left-radius $border-top-right-radius $border-bottom-right-radius $border-bottom-left-radius;
+}

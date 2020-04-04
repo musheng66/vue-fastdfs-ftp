@@ -1,0 +1,96 @@
+//main
+$mainBg: #409eff;
+
+/**
+  定义 css 公用数值
+ */
+html, body {
+  font-size: 14px;
+}
+// standard font size
+$standardFontSize: 14px;
+@function rem($px){ // $px为需要转换的字号，此项目暂不使用
+  @return $px / $standardFontSize * 1rem;
+}
+
+// colors
+$blue:#324157;
+$light-blue:#3A71A8;
+$red:#C03639;
+$pink: #E65D6E;
+$green: #30B08F;
+$tiffany: #4AB7BD;
+$yellow:#FEC171;
+$panGreen: #30B08F;
+
+$white: #fff;
+$black: #000;
+$light_gray: #eee;
+$dark_gray: #889aa4;
+
+// main style
+$main-page-bg: #EFEFEF;
+$main-font-color: $black;
+
+// common variables
+$mainBgColor: #fff;
+$mainTextColor: #111;
+$commonPadding: 15px;
+$commonMargin: 15px;
+$smallPadding: 10px;
+$largePadding: 20px;
+$contentBgColor: #f3f3f3;
+
+// sidebar
+$menuText:#bfcbd9;
+$menuActiveText:#409EFF;
+$subMenuActiveText:#f4f4f5; // https://github.com/ElemeFE/element/issues/12951
+
+$menuBg:#304156;
+$menuHover:#263445;
+
+$subMenuBg:#1f2d3d;
+$subMenuHover:#001528;
+
+$sideBarWidth: 210px;
+$sideBarCollapseWidth: 60px;
+
+// navbar
+$navCommonPadding: $commonPadding;
+$navBarHeight: 50px;
+$logoAreaWidth: $sideBarWidth;
+$logoAreaHeight: $navBarHeight - 1px;
+$navBarColor: #eee;
+
+// tags-view
+$tagsViewHeight: 34px;
+
+// css responsive width defined
+$responsive-width-small: 992px;
+$responsive-width-xs: 660px;
+$responsive-width-xxs: 320px;
+$responsive-width-middle: 1200px;
+$responsive-width-large: 1440px;
+
+// base color
+$blue:#324157;
+$light-blue:#3A71A8;
+$red:#C03639;
+$pink: #E65D6E;
+$green: #30B08F;
+$tiffany: #4AB7BD;
+$yellow:#FEC171;
+$panGreen: #30B08F;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}

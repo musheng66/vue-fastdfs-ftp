@@ -125,9 +125,10 @@ export default {
     box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
     color: #ffffff;
     border-radius: 4px;
-    background: -webkit-linear-gradient(to bottom, #5a6a76 , #2e3940); /* Safari 5.1 - 6.0 */
-    background: -o-linear-gradient(to bottom, #5a6a76, #2e3940); /* Opera 11.1 - 12.0 */
-    background: -moz-linear-gradient(to bottom, #5a6a76, #2e3940); /* Firefox 3.6 - 15 */
-    background: linear-gradient(to bottom, #5a6a76 , #2e3940);
+    /*background: -webkit-linear-gradient(to bottom, #5a6a76 , #2e3940); !* Safari 5.1 - 6.0 *!*/
+    /*background: -o-linear-gradient(to bottom, #5a6a76, #2e3940); !* Opera 11.1 - 12.0 *!*/
+    /*background: -moz-linear-gradient(to bottom, #5a6a76, #2e3940); !* Firefox 3.6 - 15 *!*/
+    /*background: linear-gradient(to bottom, #5a6a76 , #2e3940);*/
+    background: #409EFF;
   }
 </style>

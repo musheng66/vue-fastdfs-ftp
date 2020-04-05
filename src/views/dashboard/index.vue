@@ -6,18 +6,21 @@
     <main class="home">
       <file></file>
     </main>
-    <footer class="footer">CASIC ｜ 2020</footer>
+    <footer class="footer">
+      <bottom-bar></bottom-bar>
+    </footer>
   </div>
 </template>
 
 <script>
-import { TooBar, File } from './components'
+import { TooBar, File, BottomBar } from './components'
 
 export default {
   name: 'Dashboard',
   components: {
     TooBar,
-    File
+    File,
+    BottomBar
   },
   data () {
     return { }
@@ -44,8 +47,8 @@ export default {
     .footer {
       color: #aaa;
       padding: 5px;
-      text-align: center;
       height: 29px;
+      background: rgba(222, 222, 222, 0.4);
     }
   }
 </style>

@@ -24,6 +24,15 @@ module.exports = {
     },
     // proxy: { // change xxx-api/login => mock/login, detail: https://cli.vuejs.org/config/#devserver-proxy
     // }
+    proxy: {
+      '/fastdfs': {
+        target: `http://localhost:8000`,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/fastdfs': 'fastdfs'
+        }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

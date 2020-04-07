@@ -4,19 +4,16 @@
     <el-dialog title="上传文件" :visible.sync="dialogVisibleUpload" width="480px" append-to-body>
       <div class="dialog-content">
         <el-upload
-          class="upload-demo"
+          class="upload-file"
           drag
-          action="https://jsonplaceholder.typicode.com/posts/"
-          multiple>
+          :action="'/fastdfs/upload/file/' + currentDir.id"
+          :on-success="uploadSuccess"
+          :file-list="fileList">
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+          <div class="el-upload__tip" slot="tip">只能上传不超过 <b>500M</b> 的文件</div>
         </el-upload>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="uploadSubmit">确 定</el-button>
-        <el-button @click="dialogVisibleUpload = false">取 消</el-button>
-      </span>
     </el-dialog>
   </div>
 </template>
@@ -28,15 +25,13 @@ export default {
   data () {
     return {
       dialogVisibleUpload: false,
-      formCreateDir: {
-        name: ''
-      }
+      fileList: []
     }
   },
   computed: {
-    currentDirId: {
+    currentDir: {
       get () {
-        return this.$store.state.fastdfs.currentDirId
+        return this.$store.state.fastdfs.currentDir
       }
     }
   },
@@ -44,15 +39,25 @@ export default {
   },
   methods: {
     upload () {
-      this.formCreateDir.name = ''
       this.dialogVisibleUpload = true
     },
-    uploadSubmit () {
-      this.$store.dispatch('fastdfs/createDir', { parentId: this.currentDirId, name: this.formCreateDir.name }).then(res => {
-        this.dialogVisibleUpload = false
-        if (this.currentDirId) this.$store.dispatch('fastdfs/getDirById', this.currentDirId).then()
-      })
+    uploadSuccess () {
+      this.dialogVisibleUpload = false
+      if (this.currentDir.id) this.$store.dispatch('fastdfs/getDirById', this.currentDir.id).then()
     }
   }
 }
 </script>
+<style lang="scss">
+  .dialog-content {
+    .upload-file {
+      width: 100%;
+      .el-upload {
+        width: 100%;
+        .el-upload-dragger {
+          width: 100%;
+        }
+      }
+    }
+  }
+</style>

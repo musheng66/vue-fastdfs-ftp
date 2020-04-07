@@ -30,9 +30,9 @@ export default {
     }
   },
   computed: {
-    currentDirId: {
+    currentDir: {
       get () {
-        return this.$store.state.fastdfs.currentDirId
+        return this.$store.state.fastdfs.currentDir
       }
     }
   },
@@ -44,9 +44,10 @@ export default {
       this.dialogVisibleCreateDir = true
     },
     createDirSubmit () {
-      this.$store.dispatch('fastdfs/createDir', { parentId: this.currentDirId, name: this.formCreateDir.name }).then(res => {
+      this.$store.dispatch('fastdfs/createDir', { parentId: this.currentDir.id, dirName: this.formCreateDir.name }).then(res => {
         this.dialogVisibleCreateDir = false
-        if (this.currentDirId) this.$store.dispatch('fastdfs/getDirById', this.currentDirId).then()
+        this.$message({ type: 'success', message: '创建成功!' })
+        if (this.currentDir.id) this.$store.dispatch('fastdfs/getDirById', this.currentDir.id).then()
       })
     }
   }

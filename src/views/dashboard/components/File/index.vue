@@ -3,12 +3,12 @@
     <div class="file-area" @contextmenu="rightClick" data-target-type="container">
       <vue-drag-select v-model="selectedList" value-key="name" :item-width="100" :item-height="120" :item-margin="[10, 10, 10, 10]" ref="dragSelect">
         <template v-for="(item, index) in itemList">
-          <drag-select-option :key="item.id" :value="item" :item-index="index" data-target-type="item" :data-item-type="item.type" :data-item-id="item.id" @dblclick.native="dbClick">
+          <drag-select-option :key="item.id" :value="item" :item-index="index" data-target-type="item" :data-item-type="item.ftpType" :data-item-id="item.id" @dblclick.native="dbClick">
             <div class="item-self" :title="item.name">
               <div class="file-item">
                 <div class="file-icon">
-                  <i v-if="item.type === 'folder'" class="el-icon-folder"></i>
-                  <i v-if="item.type === 'file'" class="el-icon-document"></i>
+                  <i v-if="item.ftpType === 'dir'" class="el-icon-folder"></i>
+                  <i v-if="item.ftpType === 'file'" class="el-icon-document"></i>
                 </div>
                 <div class="file-info">{{ item.name }}</div>
               </div>
@@ -29,8 +29,8 @@
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button v-if="formRename.type === 'folder'" type="primary" @click="renameDirSubmit">确 定</el-button>
-        <el-button v-if="formRename.type === 'file'" type="primary" @click="renameFileSubmit">确 定</el-button>
+        <el-button v-if="formRename.ftpType === 'dir'" type="primary" @click="renameDirSubmit">确 定</el-button>
+        <el-button v-if="formRename.ftpType === 'file'" type="primary" @click="renameFileSubmit">确 定</el-button>
         <el-button @click="dialogVisibleRename = false">取 消</el-button>
       </span>
     </el-dialog>
@@ -75,7 +75,9 @@ export default {
       },
       dialogVisibleRename: false,
       formRename: {
+        id: '',
         name: '',
+        oldName: '',
         type: ''
       }
     }
@@ -94,14 +96,14 @@ export default {
         return this.$store.state.fastdfs.itemList
       }
     },
-    currentDirId: {
+    currentDir: {
       get () {
-        return this.$store.state.fastdfs.currentDirId
+        return this.$store.state.fastdfs.currentDir
       }
     }
   },
   mounted () {
-    this.getItemList(this.currentDirId !== '' ? this.currentDirId : '0')
+    this.getItemList('1', false)
   },
   methods: {
     /**
@@ -110,10 +112,9 @@ export default {
      * @param setWards 是否记录步骤
      */
     getItemList (dirId, setWards = true) {
-      dirId = dirId || this.currentDirId
+      dirId = dirId || this.currentDir.id
       if (!dirId) return
       this.$store.dispatch('fastdfs/getDirById', dirId).then(res => {
-        this.$store.dispatch('fastdfs/setCurrentDirId', dirId)
         if (setWards) this.$store.dispatch('fastdfs/addBackward', dirId)
       })
     },
@@ -137,29 +138,46 @@ export default {
     },
     del () {
       const item = this.selectedList[0]
-      if (item.type === 'folder') this.delDir(item)
-      if (item.type === 'file') this.delFile(item)
+      if (item.ftpType === 'dir') this.delDir(item)
+      if (item.ftpType === 'file') this.delFile(item)
     },
     delFile (item) {
-      this.$store.dispatch('fastdfs/deleteFileById', item.id).then(res => {
-        this.getItemList(null, false)
-      })
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        cancelButtonText: '取消',
+        confirmButtonText: '确定',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('fastdfs/deleteFileById', item.id).then(res => {
+          this.$message({ type: 'success', message: '删除成功!' })
+          this.getItemList(null, false)
+        })
+      }).catch(() => { })
     },
     delDir (item) {
-      this.$store.dispatch('fastdfs/deleteDirById', item.id).then(res => {
-        this.getItemList(null, false)
-      })
+      this.$confirm('此操作将永久删除该文件夹及其包含的文件, 是否继续?', '提示', {
+        cancelButtonText: '取消',
+        confirmButtonText: '确定',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('fastdfs/deleteDirById', item.id).then(res => {
+          this.$message({ type: 'success', message: '删除成功!' })
+          this.getItemList(null, false)
+        })
+      }).catch(() => { })
     },
     rename () {
       const item = this.selectedList[0]
-      if (item.type === 'file') return // 暂不支持文件重命名
+      if (item.ftpType === 'file') return // 暂不支持文件重命名
+      this.formRename.id = item.id
       this.formRename.name = item.name
-      this.formRename.type = item.type
+      this.formRename.oldName = item.name
+      this.formRename.ftpType = item.ftpType
       this.dialogVisibleRename = true
     },
     renameDirSubmit () {
-      this.$store.dispatch('fastdfs/renameDir', { parentId: this.currentDirId, name: this.formRename.name }).then(res => {
+      this.$store.dispatch('fastdfs/renameDir', { dirId: this.formRename.id, newName: this.formRename.name, oldName: this.formRename.oldName }).then(res => {
         this.dialogVisibleRename = false
+        this.$message({ type: 'success', message: '重命名成功!' })
         this.getItemList(null, false)
       })
     },
@@ -181,7 +199,11 @@ export default {
       if (!targetItem) return
       let itemType = targetItem.dataset.itemType
       let itemId = targetItem.dataset.itemId
-      if (itemType === 'folder') this.getItemList(itemId)
+      if (itemType === 'dir') {
+        // 将当前文件夹id记录到后退集合中
+        this.$store.dispatch('fastdfs/addBackward', this.currentDir.id)
+        this.getItemList(itemId, false)
+      }
     },
     // 右键事件
     rightClick (event) {
@@ -214,7 +236,7 @@ export default {
               // 只选中1项时
               contextListCalc.push('del')
               contextListCalc.push('move')
-              if (itemType === 'folder') contextListCalc.push('rename')
+              if (itemType === 'dir') contextListCalc.push('rename')
               if (itemType === 'file') contextListCalc.push('download')
             } else {
               // 选中多项
@@ -231,7 +253,7 @@ export default {
             // 允许删除、重命名、移动文件，下载
             contextListCalc.push('del')
             contextListCalc.push('move')
-            if (itemType === 'folder') contextListCalc.push('rename')
+            if (itemType === 'dir') contextListCalc.push('rename')
             if (itemType === 'file') contextListCalc.push('download')
           }
           break

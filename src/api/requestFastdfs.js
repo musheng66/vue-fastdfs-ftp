@@ -1,6 +1,7 @@
 import axios from 'axios'
 import NProgress from 'nprogress' // progress bar
-import 'nprogress/nprogress.css' // progress bar style
+import 'nprogress/nprogress.css'
+import { Message } from 'element-ui' // progress bar style
 /**
  * 创建 axios 实例
  */
@@ -59,7 +60,22 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
   response => {
     NProgress.done()
-    return response.data
+    // 可根据自定义 status 判断状态，自定义 status 最好放在响应返回的 data 对象中
+    const data = response.data
+    // 下载文件
+    if (response.config.responseType === 'blob') {
+      return Promise.resolve(data)
+    }
+    if (String(data.returnCode) === '200') {
+      return data.returnData
+    } else {
+      Message({
+        message: data.message,
+        type: 'error',
+        duration: 3 * 1000
+      })
+    }
+    return Promise.reject(data)
   },
   error => {
     NProgress.done()

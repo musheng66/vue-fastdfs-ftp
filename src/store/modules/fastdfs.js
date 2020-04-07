@@ -1,4 +1,4 @@
-import { deleteFileById, getDirById, renameDirById, deleteDirById, createDirById, downloadFileById, uploadFile } from '@/api/fastdfs/index'
+import { deleteFileById, getDirById, renameDir, deleteDirById, createDir, downloadFileById, uploadFile } from '@/api/fastdfs/index'
 
 const state = {
   itemList: [], // 当前显示的文件列表
@@ -78,9 +78,9 @@ const actions = {
     })
   },
   // 重命名文件夹
-  renameDirById ({ commit, state }, dirInfo) {
+  renameDir ({ commit, state }, dirInfo) {
     return new Promise((resolve, reject) => {
-      renameDirById(dirInfo).then(data => {
+      renameDir(dirInfo).then(data => {
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -98,9 +98,9 @@ const actions = {
     })
   },
   // 创建文件夹
-  createDirById ({ commit, state }, dirInfo) {
+  createDir ({ commit, state }, dirInfo) {
     return new Promise((resolve, reject) => {
-      createDirById(dirInfo).then(data => {
+      createDir(dirInfo).then(data => {
         resolve(data)
       }).catch(error => {
         reject(error)

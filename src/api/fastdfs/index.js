@@ -51,12 +51,13 @@ export function getDirById (dirId) {
 
 /**
  * 重命名文件夹
- * @param {String} dirId
+ * @param {Object} dirInfo
  */
-export function renameDirById (dirId) {
+export function renameDir (dirInfo) {
   return request({
-    url: '/fastdfs/dir/' + dirId,
-    method: 'put'
+    url: '/fastdfs/dir/' + dirInfo.parentId,
+    method: 'put',
+    data: dirInfo
   })
 }
 
@@ -73,12 +74,13 @@ export function deleteDirById (dirId) {
 
 /**
  * 创建文件夹
- * @param {String} dirId
+ * @param {Object} dirInfo
  */
-export function createDirById (dirId) {
+export function createDir (dirInfo) {
   return request({
-    url: '/fastdfs/dir/' + dirId,
-    method: 'post'
+    url: '/fastdfs/dir/' + dirInfo.parentId,
+    method: 'post',
+    data: dirInfo
   })
 }
 

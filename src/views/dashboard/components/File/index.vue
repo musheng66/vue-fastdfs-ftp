@@ -17,24 +17,41 @@
         </template>
       </vue-drag-select>
       <!-- 右键菜单 -->
-      <vue-context-menu :context-menu-data="contextMenuData" @del="del" @rename="rename" @download="download" @upload="upload" @move="move" @addDir="addDir"></vue-context-menu>
+      <vue-context-menu :context-menu-data="contextMenuData" @refresh="refresh" @del="del" @rename="rename" @download="download" @upload="upload" @move="move" @createDir="createDir"></vue-context-menu>
     </div>
+    <!-- 重命名 -->
     <el-dialog title="重命名" :visible.sync="dialogVisibleRename" width="480px" append-to-body>
-      <span>这是一段信息</span>
+      <div class="dialog-content">
+        <el-form ref="formRename" :model="formRename" label-width="40px">
+          <el-form-item label="名称">
+            <el-input v-model="formRename.name"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
       <span slot="footer" class="dialog-footer">
+        <el-button v-if="formRename.type === 'folder'" type="primary" @click="renameDirSubmit">确 定</el-button>
+        <el-button v-if="formRename.type === 'file'" type="primary" @click="renameFileSubmit">确 定</el-button>
         <el-button @click="dialogVisibleRename = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisibleRename = false">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 新建文件夹 -->
+    <create-dir ref="createDir"></create-dir>
+    <!-- 上传文件 -->
+    <upload-file ref="uploadFile"></upload-file>
   </div>
 </template>
 
 <script>
+import FileSaver from 'file-saver'
 // 右键菜单
 import VueContextMenu from '@/components/Contextmenu'
+import CreateDir from './CreateDir'
+import Upload from './Upload'
 export default {
   components: {
-    VueContextMenu
+    VueContextMenu,
+    CreateDir,
+    UploadFile: Upload
   },
   data () {
     return {
@@ -56,7 +73,11 @@ export default {
           // }
         ]
       },
-      dialogVisibleRename: false
+      dialogVisibleRename: false,
+      formRename: {
+        name: '',
+        type: ''
+      }
     }
   },
   computed: {
@@ -89,38 +110,60 @@ export default {
      * @param setWards 是否记录步骤
      */
     getItemList (dirId, setWards = true) {
+      dirId = dirId || this.currentDirId
+      if (!dirId) return
       this.$store.dispatch('fastdfs/getDirById', dirId).then(res => {
         this.$store.dispatch('fastdfs/setCurrentDirId', dirId)
         if (setWards) this.$store.dispatch('fastdfs/addBackward', dirId)
       })
     },
+    refresh () {
+      this.getItemList(null, false)
+    },
     download () {
-
+      const item = this.selectedList[0]
+      this.$store.dispatch('fastdfs/downloadFileById', item.id).then(res => {
+        FileSaver.saveAs(res.data, item.name)
+      })
     },
     upload () {
-
+      this.$refs.uploadFile.upload()
     },
     move () {
 
     },
-    addDir () {
-
+    createDir () {
+      this.$refs.createDir.createDir()
     },
     del () {
       const item = this.selectedList[0]
-      if (item.type === 'folder') this.delFolder(item)
+      if (item.type === 'folder') this.delDir(item)
       if (item.type === 'file') this.delFile(item)
     },
     delFile (item) {
-
+      this.$store.dispatch('fastdfs/deleteFileById', item.id).then(res => {
+        this.getItemList(null, false)
+      })
     },
-    delFolder (item) {
-
+    delDir (item) {
+      this.$store.dispatch('fastdfs/deleteDirById', item.id).then(res => {
+        this.getItemList(null, false)
+      })
     },
     rename () {
       const item = this.selectedList[0]
       if (item.type === 'file') return // 暂不支持文件重命名
+      this.formRename.name = item.name
+      this.formRename.type = item.type
       this.dialogVisibleRename = true
+    },
+    renameDirSubmit () {
+      this.$store.dispatch('fastdfs/renameDir', { parentId: this.currentDirId, name: this.formRename.name }).then(res => {
+        this.dialogVisibleRename = false
+        this.getItemList(null, false)
+      })
+    },
+    renameFileSubmit () {
     },
     // 双击事件
     dbClick (event) {
@@ -195,20 +238,22 @@ export default {
         case 'container':
           // 右键点击空白位置，清掉其余被选中项，允许上传文件，新建文件夹操作
           this.selectedList = []
+          contextListCalc.push('refresh')
           contextListCalc.push('upload')
-          contextListCalc.push('addDir')
+          contextListCalc.push('createDir')
           break
         default:
           break
       }
       // if (contextListCalc.includes('copy')) { this.contextMenuData.menuList.push({ fnHandler: 'copy', icoName: 'el-icon-document-copy', btnName: '复制' }) }
       // if (contextListCalc.includes('paste')) { this.contextMenuData.menuList.push({ fnHandler: 'paste', icoName: 'el-icon-document-checked', btnName: '粘贴' }) }
+      if (contextListCalc.includes('refresh')) { this.contextMenuData.menuList.push({ fnHandler: 'refresh', icoName: 'el-icon-refresh', btnName: '刷新' }) }
       if (contextListCalc.includes('download')) { this.contextMenuData.menuList.push({ fnHandler: 'download', icoName: 'el-icon-download', btnName: '下载' }) }
       if (contextListCalc.includes('del')) { this.contextMenuData.menuList.push({ fnHandler: 'del', icoName: 'el-icon-delete', btnName: '删除' }) }
       if (contextListCalc.includes('rename')) { this.contextMenuData.menuList.push({ fnHandler: 'rename', icoName: 'el-icon-edit-outline', btnName: '重命名' }) }
       if (contextListCalc.includes('move')) { this.contextMenuData.menuList.push({ fnHandler: 'move', icoName: 'el-icon-receiving', btnName: '移动' }) }
       if (contextListCalc.includes('upload')) { this.contextMenuData.menuList.push({ fnHandler: 'upload', icoName: 'el-icon-upload2', btnName: '上传文件' }) }
-      if (contextListCalc.includes('addDir')) { this.contextMenuData.menuList.push({ fnHandler: 'addDir', icoName: 'el-icon-folder-add', btnName: '新建文件夹' }) }
+      if (contextListCalc.includes('createDir')) { this.contextMenuData.menuList.push({ fnHandler: 'createDir', icoName: 'el-icon-folder-add', btnName: '新建文件夹' }) }
       // 设置右键菜单位置
       let x = event.clientX
       let y = event.clientY

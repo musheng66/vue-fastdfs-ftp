@@ -28,25 +28,44 @@ export default {
     }
   },
   methods: {
-    getItemList (dirId) {
+    /**
+     * 获取目录
+     * @param dirId 目录id
+     * @param step 操作步骤：前进/后退/向上
+     */
+    getItemList (dirId, step) {
+      dirId = dirId || this.currentDirId
+      if (!dirId) return
       this.$store.dispatch('fastdfs/getDirById', dirId).then(res => {
         this.$store.dispatch('fastdfs/setCurrentDirId', dirId)
+        switch (step) {
+          case 'backward':
+            this.$store.dispatch('fastdfs/removeBackward')
+            this.$store.dispatch('fastdfs/addForward', dirId)
+            break
+          case 'forward':
+            this.$store.dispatch('fastdfs/removeForward')
+            this.$store.dispatch('fastdfs/addBackward', dirId)
+            break
+          case 'upward':
+            this.$store.dispatch('fastdfs/addBackward', dirId)
+            break
+          default:
+            break
+        }
       })
     },
     backward () {
       const dirId = this.backwards[this.backwards.length - 1]
-      this.getItemList(dirId)
-      this.$store.dispatch('fastdfs/removeBackward')
-      this.$store.dispatch('fastdfs/addForward', dirId)
+      this.getItemList(dirId, 'backward')
     },
     forward () {
       const dirId = this.forwards[this.forwards.length - 1]
-      this.getItemList(dirId)
-      this.$store.dispatch('fastdfs/removeForward')
-      this.$store.dispatch('fastdfs/addBackward', dirId)
+      this.getItemList(dirId, 'forward')
     },
     upward () {
-
+      let dirId = null
+      this.getItemList(dirId, 'upward')
     }
   }
 }

@@ -123,8 +123,8 @@ export default {
     },
     download () {
       const item = this.selectedList[0]
-      this.$store.dispatch('fastdfs/downloadFileById', item.id).then(res => {
-        FileSaver.saveAs(new Blob([res.data]), item.name)
+      this.$store.dispatch('fastdfs/downloadFileById', item.id).then(data => {
+        FileSaver.saveAs(new Blob([data]), item.name)
       })
     },
     upload () {

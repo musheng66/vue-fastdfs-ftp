@@ -1,19 +1,25 @@
 <template>
   <div class="path">
-    <el-input placeholder="请输入内容" v-model="pathText" disabled="disabled">
+    <el-input placeholder="当前路径" v-model="currentDir.path" disabled="disabled">
       <template slot="prepend">ftp://</template>
-      <el-button slot="append" icon="el-icon-refresh" title="刷新"></el-button>
+      <el-button slot="append" icon="el-icon-refresh" title="刷新" @click="refresh"></el-button>
     </el-input>
   </div>
 </template>
 
 <script>
-
 export default {
   components: { },
-  data () {
-    return {
-      pathText: '/t/e/s/t/xxx/'
+  computed: {
+    currentDir: {
+      get () {
+        return this.$store.state.fastdfs.currentDir
+      }
+    }
+  },
+  methods: {
+    refresh () {
+      this.$store.dispatch('fastdfs/getDirById', this.currentDir.id).then()
     }
   }
 }

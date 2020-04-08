@@ -63,7 +63,7 @@ export default {
       this.getItemList(dirId, 'forward')
     },
     upward () {
-      let dirId = null
+      let dirId = String(this.currentDir.parentId)
       this.getItemList(dirId, 'upward')
     }
   }

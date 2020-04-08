@@ -16,76 +16,69 @@ export function deleteFileById (fileId) {
  * @param {String} dirId
  */
 export function getDirById (dirId) {
-  let result = {}
-  if (dirId && String(dirId) !== '1') {
-    // result = [
-    //   { id: '143423', name: 'dfgsdbcvb', type: 'folder' },
-    //   { id: '16232', name: 'tesxxdft16.pdf', type: 'file' },
-    //   { id: '14233', name: 'erwefg.txt', type: 'file' },
-    //   { id: '12343', name: 'wh4esht', type: 'folder' },
-    //   { id: '134323', name: 'cvbet', type: 'folder' }
-    // ]
-    result = {
-      dirs: [
-        { createTime: '20200403162414', ip: '192.168.137.1', dirId: 22, parentId: 1, dirName: '数据治理123' },
-        { createTime: '20200407105018', ip: '172.16.5.179', dirId: 32, parentId: 1, dirName: '机器学习442' }
-      ],
-      files: [
-        {
-          fileName: '儿童医院NCPCS合作开发项目验收规范2.docx',
-          createTime: '20200407111947',
-          httpUrl: '172.16.1.19:80/group1/M00/00/00/rBABE16L8aSAOlQVAACGlJ6gb0086.docx?token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587',
-          filePath: 'group1/M00/00/00/rBABE16L8aSAOlQVAACGlJ6gb0086.docx',
-          ip: '172.16.5.179',
-          dirId: 1,
-          fileType: 'docx',
-          fileId: 12,
-          token: 'token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587'
-        }
-      ],
-      parentId: 1,
-      path: '172.16.1.19:80/test'
-    }
-  } else {
-    result = {
-      dirs: [
-        { createTime: '20200403162414', ip: '192.168.137.1', dirId: 2, parentId: 0, dirName: '数据治理' },
-        { createTime: '20200403175133', ip: '192.168.137.1', dirId: 4, parentId: 0, dirName: '智慧展示' },
-        { createTime: '20200407105018', ip: '172.16.5.179', dirId: 3, parentId: 0, dirName: '机器学习' }
-      ],
-      files: [
-        {
-          fileName: '儿童医院NCPCS合作开发项目验收规范.docx',
-          createTime: '20200403111947',
-          httpUrl: '172.16.1.19:80/group1/M00/00/00/rBABE16L8aSAOlQVAACGlJ6gb0086.docx?token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587',
-          filePath: 'group1/M00/00/00/rBABE16L8aSAOlQVAACGlJ6gb0086.docx',
-          ip: '172.16.5.179',
-          dirId: 0,
-          fileType: 'docx',
-          fileId: 1,
-          token: 'token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587'
-        },
-        {
-          fileName: '文件管理接口.doc',
-          createTime: '20200407131422',
-          httpUrl: '172.16.1.19:80/group1/M00/00/00/rIEWN9EL8aSAOlNUNS8lJ6gb0193.doc?token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587',
-          filePath: 'group1/M00/00/00/rIEWN9EL8aSAOlNUNS8lJ6gb0193.doc',
-          ip: '172.16.5.179',
-          dirId: 0,
-          fileType: 'doc',
-          fileId: 2,
-          token: 'token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587'
-        }
-      ],
-      parentId: 0,
-      path: '172.16.1.19:80/'
-    }
-  }
-  return Promise.resolve(result)
-  // return request({
-  //   url: '/fastdfs/dir/' + dirId,
-  //   method: 'get'
-  // })
+  // let result = {}
+  // if (dirId && String(dirId) !== '1') {
+  //   result = {
+  //     dirs: [
+  //       { createTime: '20200403162414', ip: '192.168.137.1', dirId: 22, parentId: 1, dirName: '数据治理123' },
+  //       { createTime: '20200407105018', ip: '172.16.5.179', dirId: 32, parentId: 1, dirName: '机器学习442' }
+  //     ],
+  //     files: [
+  //       {
+  //         fileName: '儿童医院NCPCS合作开发项目验收规范2.docx',
+  //         createTime: '20200407111947',
+  //         httpUrl: '172.16.1.19:80/group1/M00/00/00/rBABE16L8aSAOlQVAACGlJ6gb0086.docx?token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587',
+  //         filePath: 'group1/M00/00/00/rBABE16L8aSAOlQVAACGlJ6gb0086.docx',
+  //         ip: '172.16.5.179',
+  //         dirId: 1,
+  //         fileType: 'docx',
+  //         fileId: 12,
+  //         token: 'token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587'
+  //       }
+  //     ],
+  //     parentId: 1,
+  //     path: '172.16.1.19:80/test'
+  //   }
+  // } else {
+  //   result = {
+  //     dirs: [
+  //       { createTime: '20200403162414', ip: '192.168.137.1', dirId: 2, parentId: 0, dirName: '数据治理' },
+  //       { createTime: '20200403175133', ip: '192.168.137.1', dirId: 4, parentId: 0, dirName: '智慧展示' },
+  //       { createTime: '20200407105018', ip: '172.16.5.179', dirId: 3, parentId: 0, dirName: '机器学习' }
+  //     ],
+  //     files: [
+  //       {
+  //         fileName: '儿童医院NCPCS合作开发项目验收规范.docx',
+  //         createTime: '20200403111947',
+  //         httpUrl: '172.16.1.19:80/group1/M00/00/00/rBABE16L8aSAOlQVAACGlJ6gb0086.docx?token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587',
+  //         filePath: 'group1/M00/00/00/rBABE16L8aSAOlQVAACGlJ6gb0086.docx',
+  //         ip: '172.16.5.179',
+  //         dirId: 0,
+  //         fileType: 'docx',
+  //         fileId: 1,
+  //         token: 'token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587'
+  //       },
+  //       {
+  //         fileName: '文件管理接口.doc',
+  //         createTime: '20200407131422',
+  //         httpUrl: '172.16.1.19:80/group1/M00/00/00/rIEWN9EL8aSAOlNUNS8lJ6gb0193.doc?token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587',
+  //         filePath: 'group1/M00/00/00/rIEWN9EL8aSAOlNUNS8lJ6gb0193.doc',
+  //         ip: '172.16.5.179',
+  //         dirId: 0,
+  //         fileType: 'doc',
+  //         fileId: 2,
+  //         token: 'token=24738fe16e6cebd7f9a0bb358dd025b5&ts=1586229587'
+  //       }
+  //     ],
+  //     parentId: 0,
+  //     path: '172.16.1.19:80/'
+  //   }
+  // }
+  // return Promise.resolve(result)
+  return request({
+    url: '/fastdfs/dir/' + dirId,
+    method: 'get'
+  })
 }
 
 /**

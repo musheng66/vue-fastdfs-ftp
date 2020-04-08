@@ -124,7 +124,7 @@ export default {
     download () {
       const item = this.selectedList[0]
       this.$store.dispatch('fastdfs/downloadFileById', item.id).then(res => {
-        FileSaver.saveAs(res.data, item.name)
+        FileSaver.saveAs(new Blob([res.data]), item.name)
       })
     },
     upload () {

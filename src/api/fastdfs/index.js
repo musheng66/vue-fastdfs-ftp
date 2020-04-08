@@ -100,10 +100,7 @@ export function renameDir (dirInfo) {
 export function deleteDirById (dirId) {
   return request({
     url: '/fastdfs/dir/' + dirId,
-    method: 'delete',
-    params: {
-      dirId: dirId
-    }
+    method: 'delete'
   })
 }
 
